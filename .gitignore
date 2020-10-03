@@ -1,0 +1,9 @@
+.idea
+__pycache__
+.vscode
+.DS_Store
+.env
+*.rest
+images
+venv
+config
