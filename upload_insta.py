@@ -4,11 +4,10 @@ from PIL import Image
 from instabot.api.api_photo import compatible_aspect_ratio, get_image_size
 from dotenv import load_dotenv
 import utils
-
+from scipy.optimize import minimize_scalar
+import numpy as np
 
 def crop_maximize_entropy(img, min_ratio=4 / 5, max_ratio=90 / 47):
-    from scipy.optimize import minimize_scalar
-    import numpy as np
 
     def _entropy(data):
         """Calculate the entropy of an image"""
