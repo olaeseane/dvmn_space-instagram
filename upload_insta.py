@@ -8,6 +8,10 @@ from scipy.optimize import minimize_scalar
 import numpy as np
 import re
 
+
+def get_image_files(pattern, dir):
+    return filter(lambda x: re.search(pattern, x), os.listdir(dir))
+
 def crop_maximize_entropy(img, min_ratio=4 / 5, max_ratio=90 / 47):
 
     def _entropy(data):
@@ -46,11 +50,11 @@ def crop_maximize_entropy(img, min_ratio=4 / 5, max_ratio=90 / 47):
 
 
 def transform_images():
-    image_files = filter(lambda x: re.search("\.jpg|\.png|\.jpeg", x), os.listdir(utils.IMAGE_DIR))
+    image_files = get_image_files("\.jpg|\.png|\.jpeg", utils.IMAGE_DIR)
     for image_file in image_files:
         try:
             if not compatible_aspect_ratio(get_image_size(f"{utils.IMAGE_DIR}/{image_file}")):
-                image = Image.open(f"{utils.IMAGE_DIR}/{f}")
+                image = Image.open(f"{utils.IMAGE_DIR}/{image_file}")
                 image = crop_maximize_entropy(image)
                 image.save(f"{utils.IMAGE_DIR}/{image_file.split('.')[0]}.jpg", format="JPEG")
         except Exception as err:
@@ -62,7 +66,7 @@ def upload_insta_images():
     pwd = os.getenv("INSTA_PASSWORD")
     bot = Bot()
     bot.login(username=username, password=pwd)
-    image_files = filter(lambda x: '.jpg' in x, os.listdir(utils.IMAGE_DIR))
+    image_files = get_image_files("\.jpg", utils.IMAGE_DIR)
     for image_file in image_files:
         bot.upload_photo(f"{utils.IMAGE_DIR}/{image_file}", caption="our universe")
         if bot.api.last_response.status_code != 200:
