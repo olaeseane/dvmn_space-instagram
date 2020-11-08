@@ -1,16 +1,18 @@
 import os
-from instabot import Bot
-from PIL import Image
-from instabot.api.api_photo import compatible_aspect_ratio, get_image_size
 from dotenv import load_dotenv
-import utils
+import re
+import logging
+from instabot import Bot
+from instabot.api.api_photo import compatible_aspect_ratio, get_image_size
+from PIL import Image
 from scipy.optimize import minimize_scalar
 import numpy as np
-import re
+import utils
 
 
 def get_image_files(pattern, dir):
     return filter(lambda x: re.search(pattern, x), os.listdir(dir))
+
 
 def crop_maximize_entropy(img, min_ratio=4 / 5, max_ratio=90 / 47):
 
@@ -55,8 +57,9 @@ def transform_images():
         try:
             if not compatible_aspect_ratio(get_image_size(f"{utils.IMAGE_DIR}/{image_file}")):
                 image = Image.open(f"{utils.IMAGE_DIR}/{image_file}")
-                image = crop_maximize_entropy(image)
-                image.save(f"{utils.IMAGE_DIR}/{image_file.split('.')[0]}.jpg", format="JPEG")
+                image.thumbnail((1080, 1080))
+                image.save(
+                    f"{utils.IMAGE_DIR}/{image_file.split('.')[0]}.jpg", format="JPEG")
         except Exception as err:
             pass
 
@@ -68,12 +71,15 @@ def upload_insta_images():
     bot.login(username=username, password=pwd)
     image_files = get_image_files("\.jpg", utils.IMAGE_DIR)
     for image_file in image_files:
-        bot.upload_photo(f"{utils.IMAGE_DIR}/{image_file}", caption="our universe")
+        bot.upload_photo(f"{utils.IMAGE_DIR}/{image_file}",
+                         caption="our universe")
         if bot.api.last_response.status_code != 200:
-            print(bot.api.last_response)
+            logging.error(bot.api.last_response)
 
 
 def main():
+    logging.basicConfig(filename="upload_insta.log",
+                        level=logging.INFO, filemode="w")
     load_dotenv()
     transform_images()
     upload_insta_images()

@@ -1,6 +1,6 @@
 import requests
-import os
 import urllib3
+import logging
 import utils
 
 
@@ -28,11 +28,15 @@ def fetch_hubble_collection(collection):
 
 
 def main():
+    logging.basicConfig(filename="fetch_hubble.log",
+                        level=logging.INFO, filemode="w")
     try:
         urllib3.disable_warnings()
         fetch_hubble_collection(HUBBLE_COLLESTIONS[4])
     except requests.exceptions.ConnectionError as conn_err:
-        print(f"Error occured - {conn_err}")
+        logging.error(f"Error occured - {conn_err}")
+    except requests.exceptions.HTTPError as http_err:
+        logging.error(f"Error occured - {http_err}")
 
 
 if __name__ == "__main__":
