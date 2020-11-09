@@ -30,7 +30,7 @@ def upload_insta_images():
         bot.upload_photo(f"{utils.IMAGE_DIR}/{image_file}",
                          caption="our universe")
         if bot.api.last_response.status_code != 200:
-            logging.error(bot.api.last_response)
+            logging.exception(f"Exception occurred - {bot.api.last_response}")
 
 
 def main():

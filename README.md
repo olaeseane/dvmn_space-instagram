@@ -9,6 +9,24 @@ Then use `pip` (or `pip3`, if there is a conflict with Python2) to install depen
 ```
 pip install -r requirements.txt
 ```
+After setup environment variables in `.env` file
+```
+INSTA_USERNAME=instagram username
+INSTA_PASSWORD=instagram password
+IMAGE_PATH=path for image downloading
+```
+
+### How to run
+
+A. Fetch images from SpaceX and Hubble
+```
+python fetch_spacex.py
+python fetch_hubble.py
+```
+B. Upload fetched images on Instagram
+```
+python upload_insta.py
+```
 
 ### Project Goals
 
