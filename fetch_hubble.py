@@ -3,6 +3,7 @@ import urllib3
 import logging
 import utils
 from dotenv import load_dotenv
+import os
 
 
 HUBBLE_IMAGE_API = "http://hubblesite.org/api/v3/image/"
@@ -16,7 +17,8 @@ def fetch_hubble_image(image_id):
     response.raise_for_status()
     image_data = response.json()
     url = f"https:{image_data['image_files'][-1]['file_url']}"
-    name = f"{image_id}{utils.get_extension(url)}"
+    (_, ext) = os.path.splitext(url)
+    name = f"{image_id}{ext}"
     utils.download_image(url, name)
 
 

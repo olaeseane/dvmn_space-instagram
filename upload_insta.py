@@ -12,12 +12,13 @@ def get_image_files(pattern, dir):
 
 
 def transform_images():
-    image_files = get_image_files("\.jpg|\.png|\.jpeg", utils.IMAGE_DIR)
+    image_files = get_image_files("\.jpg|\.png|\.jpeg", utils.image_path)
     for image_file in image_files:
-        image = Image.open(f"{utils.IMAGE_DIR}/{image_file}")
+        image = Image.open(f"{utils.image_path}/{image_file}")
         image.thumbnail((1080, 1080))
+        (file_name, _) = os.path.splitext(image_file)
         image.save(
-            f"{utils.IMAGE_DIR}/{image_file.split('.')[0]}.jpg", format="JPEG")
+            f"{utils.image_path}/{file_name}.jpg", format="JPEG")
 
 
 def upload_insta_images():
@@ -25,9 +26,9 @@ def upload_insta_images():
     pwd = os.getenv("INSTA_PASSWORD")
     bot = Bot()
     bot.login(username=username, password=pwd)
-    image_files = get_image_files("\.jpg", utils.IMAGE_DIR)
+    image_files = get_image_files("\.jpg", utils.image_path)
     for image_file in image_files:
-        bot.upload_photo(f"{utils.IMAGE_DIR}/{image_file}",
+        bot.upload_photo(f"{utils.image_path}/{image_file}",
                          caption="our universe")
         if bot.api.last_response.status_code != 200:
             logging.exception(f"Exception occurred - {bot.api.last_response}")
