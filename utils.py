@@ -4,14 +4,12 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
-image_path = os.getenv("IMAGE_PATH")
-
-
 def download_image(url, name):
-    Path(image_path).mkdir(parents=False, exist_ok=True)
+    load_dotenv()
+    path_to_images = os.getenv("IMAGE_PATH")
+    Path(path_to_images).mkdir(parents=False, exist_ok=True)
     response = requests.get(url, verify=False)
     response.raise_for_status()
-    with open(f"{image_path}/{name}", "wb") as file:
+    with open(f"{path_to_images}/{name}", "wb") as file:
         file.write(response.content)
         print(f"file {name} was downloaded")

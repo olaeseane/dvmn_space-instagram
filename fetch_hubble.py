@@ -36,7 +36,7 @@ def main():
                         level=logging.INFO, filemode="w")
     try:
         urllib3.disable_warnings()
-        fetch_hubble_collection(HUBBLE_COLLESTIONS["spacecraft"])
+        fetch_hubble_collection(HUBBLE_COLLESTIONS["stsci_gallery"])
     except requests.exceptions.ConnectionError as conn_err:
         logging.exception(f"Exception occured - {conn_err}")
     except requests.exceptions.HTTPError as http_err:
